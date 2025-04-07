@@ -2,7 +2,6 @@ import re
 import bs4
 import math
 import time
-import random
 import base64
 import hashlib
 import requests
@@ -12,6 +11,7 @@ from .cubic_curve import Cubic
 from .interpolate import interpolate
 from .rotation import convert_rotation_to_matrix
 from .utils import float_to_hex, is_odd, base64_encode, handle_x_migration
+import secrets
 
 ON_DEMAND_FILE_REGEX = re.compile(
     r"""['|\"]{1}ondemand\.s['|\"]{1}:\s*['|\"]{1}([\w]*)['|\"]{1}""", flags=(re.VERBOSE | re.MULTILINE))
@@ -152,7 +152,7 @@ class ClientTransaction:
             f"{method}!{path}!{time_now}{self.DEFAULT_KEYWORD}{animation_key}".encode()).digest()
         # hash_bytes = [int(hash_val[i]) for i in range(len(hash_val))]
         hash_bytes = list(hash_val)
-        random_num = random.randint(0, 255)
+        random_num = secrets.SystemRandom().randint(0, 255)
         bytes_arr = [*key_bytes, *time_now_bytes, *
                      hash_bytes[:16], self.ADDITIONAL_RANDOM_NUMBER]
         out = bytearray(
